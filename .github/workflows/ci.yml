@@ -35,6 +35,8 @@ jobs:
 
       - name: Set up KinD (Kubernetes-in-Docker)
         uses: helm/kind-action@v1.8.0
+        with:
+          cluster_name: kind-cluster
 
       - name: Install kubectl
         run: |
@@ -44,6 +46,14 @@ jobs:
 
       - name: Verify Kubernetes Cluster
         run: kubectl get nodes
+
+      - name: Build Docker Image
+        run: |
+          docker build -t go-app:latest .
+
+      - name: Load Image into KinD Cluster
+        run: |
+          kind load docker-image go-app:latest --name kind-cluster
 
       - name: Apply Kubernetes Manifests
         run: |
