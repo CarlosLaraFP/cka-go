@@ -14,19 +14,31 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
-// Global Redis client
-var redisClient *redis.Client
+/*
+Redis Usage				Uses dependency injection via RedisService
+Unit Test Strategy		Uses miniredis mock
+Testability				Handlers & Redis logic can be tested separately
+Code Structure			Redis logic is encapsulated in RedisService
+*/
+
+// Context for Redis operations
 var ctx = context.Background()
 
-// Initialize Redis connection
-func initRedis() {
-	redisHost := getEnv("REDIS_HOST", "localhost")
-	redisPort := getEnv("REDIS_PORT", "6379")
-	redisAddr := fmt.Sprintf("%s:%s", redisHost, redisPort)
+// RedisClient interface to allow mocking in tests
+type RedisClient interface {
+	Set(ctx context.Context, key string, value interface{}, expiration time.Duration) *redis.StatusCmd
+	Get(ctx context.Context, key string) *redis.StringCmd
+}
 
-	redisClient = redis.NewClient(&redis.Options{
-		Addr: redisAddr,
-	})
+// RedisService wraps the actual Redis client
+type RedisService struct {
+	client RedisClient
+}
+
+// NewRedisService initializes the Redis client
+func NewRedisService(addr string) *RedisService {
+	client := redis.NewClient(&redis.Options{Addr: addr})
+	return &RedisService{client: client}
 }
 
 // Get environment variable with default fallback
@@ -48,7 +60,7 @@ func healthCheck(w http.ResponseWriter, r *http.Request) {
 }
 
 // Set key in Redis
-func setKey(w http.ResponseWriter, r *http.Request) {
+func (rs *RedisService) setKey(w http.ResponseWriter, r *http.Request) {
 	key := r.URL.Query().Get("key")
 	value := r.URL.Query().Get("value")
 
@@ -57,7 +69,7 @@ func setKey(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := redisClient.Set(ctx, key, value, 0).Err()
+	err := rs.client.Set(ctx, key, value, 0).Err()
 	if err != nil {
 		http.Error(w, "Failed to set key", http.StatusInternalServerError)
 		return
@@ -67,10 +79,10 @@ func setKey(w http.ResponseWriter, r *http.Request) {
 }
 
 // Get key from Redis
-func getKey(w http.ResponseWriter, r *http.Request) {
+func (rs *RedisService) getKey(w http.ResponseWriter, r *http.Request) {
 	key := chi.URLParam(r, "key")
 
-	value, err := redisClient.Get(ctx, key).Result()
+	value, err := rs.client.Get(ctx, key).Result()
 	if err == redis.Nil {
 		http.Error(w, "Key not found", http.StatusNotFound)
 		return
@@ -101,13 +113,17 @@ func multiply(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	initRedis()
+	// Initialize Redis connection
+	redisHost := getEnv("REDIS_HOST", "localhost")
+	redisPort := getEnv("REDIS_PORT", "6379")
+	redisAddr := fmt.Sprintf("%s:%s", redisHost, redisPort)
+	redisService := NewRedisService(redisAddr)
 
 	r := chi.NewRouter()
 	r.Get("/", readRoot)
 	r.Get("/health", healthCheck)
-	r.Post("/set", setKey)
-	r.Get("/get/{key}", getKey)
+	r.Post("/set", redisService.setKey)
+	r.Get("/get/{key}", redisService.getKey)
 	r.Get("/multiply/{a}/{b}", multiply)
 
 	fmt.Println("Server running on port 8080")

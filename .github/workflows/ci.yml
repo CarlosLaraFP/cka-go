@@ -1,4 +1,4 @@
-name: Go CI
+name: Go with Kubernetes CI
 
 on:
   push:
@@ -18,50 +18,47 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.24'  # Use the latest stable version
-
-      - name: Cache Go modules
-        uses: actions/cache@v3
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
+          go-version: '1.24'
 
       - name: Install dependencies
-        run: |
-          go mod tidy
+        run: go mod tidy
 
-      - name: Run tests
-        run: |
-          go test ./... -v
+      - name: Run unit tests
+        run: go test ./... -v
 
-  docker-test:
-    needs: test  # Only runs if tests pass
+  deploy-kubernetes:
+    needs: test  # Only deploy if tests pass
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Build Docker image
-        run: |
-          docker build -t go-test-app .
+      - name: Set up KinD (Kubernetes-in-Docker)
+        uses: helm/kind-action@v1.8.0
 
-      - name: Run Docker container
+      - name: Install kubectl
         run: |
-          docker run -d -p 8080:8080 --name go-test-container go-test-app
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/
 
-      - name: Wait for container to start
-        run: |
-          sleep 5  # Wait for the server to start
-          docker ps  # Verify container is running
+      - name: Verify Kubernetes Cluster
+        run: kubectl get nodes
 
-      - name: Health check API root
+      - name: Apply Kubernetes Manifests
         run: |
-          curl --retry 5 --retry-delay 2 --fail http://localhost:8080/ || (docker logs go-test-container && exit 1)
+          kubectl apply -f k8s/redis-deployment.yaml
+          kubectl apply -f k8s/go-deployment.yaml
 
-      - name: Stop and clean up container
-        if: always()
+      - name: Wait for Pods to be Ready
+        run: kubectl wait --for=condition=Ready pod --all --timeout=90s
+
+      - name: Verify Deployment
+        run: kubectl get pods -A
+
+      - name: Test API Endpoint
         run: |
-          docker stop go-test-container
-          docker rm go-test-container
+          sleep 5  # Allow time for app to start
+          kubectl port-forward svc/go-service 8080:8080 &
+          sleep 3
+          curl --retry 5 --retry-delay 2 --fail http://localhost:8080/ || (kubectl logs deployment/go-deployment && exit 1)

@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment 
 metadata:
-  name: fastapi-deployment
+  name: go-deployment
 spec:
   replicas: 2
   strategy:
@@ -11,17 +11,17 @@ spec:
       maxSurge: 1        # Allow only 1 extra pod above desired replicas during update
   selector:
     matchLabels:
-      app: fastapi  # stateless (different services should have different deployments)
+      app: go  # stateless (different services should have different deployments)
   template:
     metadata:
-      name: fastapi-pod
+      name: go-pod
       labels:
-        app: fastapi
+        app: go
         type: stateless
     spec:
       containers:
-      - name: fastapi
-        image: fastapi-app:latest
+      - name: go
+        image: go-app:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000
