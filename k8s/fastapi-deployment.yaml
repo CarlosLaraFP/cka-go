@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: fastapi-deployment
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0  # Ensure no downtime (0 pods can be unavailable during update)
+      maxSurge: 1        # Allow only 1 extra pod above desired replicas during update
+  selector:
+    matchLabels:
+      app: fastapi  # stateless (different services should have different deployments)
+  template:
+    metadata:
+      name: fastapi-pod
+      labels:
+        app: fastapi
+        type: stateless
+    spec:
+      containers:
+      - name: fastapi
+        image: fastapi-app:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+        readinessProbe:  # Ensure app is ready before marking as available
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:  # Ensure app is healthy, else restart pod
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        resources:
+          requests:  # requests without limits are the most flexible
+            cpu: "250m"   # Request 0.25 CPU cores
+            memory: "128Mi"  # Request 128MB RAM
+          limits:
+            cpu: "500m"   # Limit to 0.5 CPU cores
+            memory: "256Mi"  # Limit to 256MB RAM
+        env:  # environment variables
+        - name: REDIS_HOST
+          value: "redis-service"  # Service name from redis-deployment.yaml
+        - name: REDIS_PORT
+          value: "6379"  # Port from redis-deployment.yaml
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-service
+spec:
+  type: NodePort  # uses Random algorithm for load balancing
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+      nodePort: 30004  # optional
+  selector:
+    app: fastapi  # this is how we connect the service to a specific pod
+    type: stateless

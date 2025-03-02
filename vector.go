@@ -1,0 +1,21 @@
+package main
+
+// Vector2D represents a tuple of two numbers
+type Vector2D struct {
+	X int
+	Y int
+}
+
+// Add two numbers
+func Add(v Vector2D) int {
+	return v.X + v.Y
+}
+
+// Reduce vectors using an operation
+func ReduceVectors(vectors []Vector2D, operation func(Vector2D) int) []int {
+	results := make([]int, len(vectors))
+	for i, v := range vectors {
+		results[i] = operation(v)
+	}
+	return results
+}

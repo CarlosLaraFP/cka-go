@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+        type: stateful
+    spec:
+      containers:
+      - name: redis
+        image: redis:7.0  # Use the latest stable Redis version
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 6379
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
+        volumeMounts:
+          - mountPath: /data
+            name: redis-storage
+      volumes:
+        - name: redis-storage
+          emptyDir: {}  # Use an emptyDir for temporary storage
+      #nodeSelector:
+      #  size: Large  # node(s) must be labeled prior to creating the pod
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:  # refer to documentation for other values
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: size
+                operator: In  # refer to documentation for other values
+                values:
+                - Large
+                - XLarge
+      tolerations:  # taints that this pod tolerates
+      - key: "database"
+        operator: "Equal"
+        value: "memory"
+        effect: "NoSchedule"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service  # Exposes Redis inside the Kubernetes cluster (ClusterIP)
+spec:
+  type: ClusterIP  # default
+  ports:  # default Redis port is 6379
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
+  selector:
+    app: redis
+    type: stateful
