@@ -49,8 +49,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker pull gcr.io/distroless/base-debian11
-          docker build -t go-app:latest k8s/.
+          docker build -t go-app:latest .
 
       - name: Load Image into KinD Cluster
         run: |

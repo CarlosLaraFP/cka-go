@@ -3,7 +3,12 @@
 # Uses Distroless (gcr.io/distroless/base-debian10) – More secure, removes shell access.
 # Efficient caching – First copies go.mod & go.sum, then downloads dependencies separately.
 
-# Why distroless?
+# We use Distroless because security is a top priority:
+
+# No unnecessary binaries reduce the attack surface.
+# We don’t need a shell or package manager – the Go app runs standalone.
+# We want a minimal image – No need for OS utilities, just the app.
+# We are deploying to Kubernetes – Distroless aligns well with lightweight, secure containers.
 # No package manager (smaller attack surface).
 # Minimalist runtime (low overhead).
 # Used in production by Google Kubernetes Engine (GKE).
@@ -21,7 +26,7 @@ COPY . .
 RUN go build -o go-app .
 
 # Second stage: Use a minimal base image
-FROM gcr.io/distroless/base-debian11  # Small, secure runtime
+FROM gcr.io/distroless/base-debian11
 COPY --from=builder /app/go-app /go-app
 
 CMD ["/go-app"]
