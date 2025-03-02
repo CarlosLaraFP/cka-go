@@ -69,6 +69,8 @@ jobs:
       - name: Test API Endpoint
         run: |
           sleep 5  # Allow time for app to start
-          kubectl port-forward svc/go-service 8080:8080 &
+          kubectl port-forward svc/go-service 8000:80 &
           sleep 3
-          curl --retry 5 --retry-delay 2 --fail http://localhost:8080/ || (kubectl logs deployment/go-deployment && exit 1)
+          curl -X POST "http://localhost:8000/set/?key=username&value=JohnDoe"
+          curl "http://localhost:8000/get/username"
+          curl --retry 5 --retry-delay 2 --fail http://localhost:8000/ || (kubectl logs deployment/go-deployment && exit 1)

@@ -126,6 +126,6 @@ func main() {
 	r.Get("/get/{key}", redisService.getKey)
 	r.Get("/multiply/{a}/{b}", multiply)
 
-	fmt.Println("Server running on port 8080")
-	log.Fatal(http.ListenAndServe(":8080", r))
+	fmt.Println("Server running on port 8000")
+	log.Fatal(http.ListenAndServe(":8000", r))
 }
