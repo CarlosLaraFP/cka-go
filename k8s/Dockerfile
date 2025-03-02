@@ -21,7 +21,7 @@ COPY . .
 RUN go build -o go-app .
 
 # Second stage: Use a minimal base image
-FROM gcr.io/distroless/base-debian10  # Small, secure runtime
+FROM gcr.io/distroless/base-debian11  # Small, secure runtime
 COPY --from=builder /app/go-app /go-app
 
 CMD ["/go-app"]
