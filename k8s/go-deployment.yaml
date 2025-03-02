@@ -54,7 +54,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: fastapi-service
+  name: go-service
 spec:
   type: NodePort  # uses Random algorithm for load balancing
   ports:
@@ -63,5 +63,5 @@ spec:
       targetPort: 8000
       nodePort: 30004  # optional
   selector:
-    app: fastapi  # this is how we connect the service to a specific pod
+    app: go  # this is how we connect the service to a specific pod
     type: stateless
