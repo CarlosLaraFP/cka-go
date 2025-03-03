@@ -19,10 +19,11 @@ spec:
         app: go
         type: stateless
     spec:
+      priorityClassName: high-priority  # Scheduling Queue (PrioritySort plugin(s)) -> Filtering (NodeResourcesFit, NodeName, NodeUnschedulable) -> Scoring (NodeResourcesFit, ImageLocality) -> Binding (DefaultBinder)
       containers:
       - name: go
         image: go-app:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         ports:
         - containerPort: 8000
         readinessProbe:  # Ensure app is ready before marking as available

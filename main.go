@@ -1,17 +1,15 @@
 package main
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 	"time"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/go-redis/redis/v8"
+	"github.com/go-redis/redis"
 )
 
 /*
@@ -20,34 +18,6 @@ Unit Test Strategy		Uses miniredis mock
 Testability				Handlers & Redis logic can be tested separately
 Code Structure			Redis logic is encapsulated in RedisService
 */
-
-// Context for Redis operations
-var ctx = context.Background()
-
-// RedisClient interface to allow mocking in tests
-type RedisClient interface {
-	Set(ctx context.Context, key string, value interface{}, expiration time.Duration) *redis.StatusCmd
-	Get(ctx context.Context, key string) *redis.StringCmd
-}
-
-// RedisService wraps the actual Redis client
-type RedisService struct {
-	client RedisClient
-}
-
-// NewRedisService initializes the Redis client
-func NewRedisService(addr string) *RedisService {
-	client := redis.NewClient(&redis.Options{Addr: addr})
-	return &RedisService{client: client}
-}
-
-// Get environment variable with default fallback
-func getEnv(key, fallback string) string {
-	if value, exists := os.LookupEnv(key); exists {
-		return value
-	}
-	return fallback
-}
 
 // Root handler
 func readRoot(w http.ResponseWriter, r *http.Request) {
@@ -113,12 +83,10 @@ func multiply(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	// Initialize Redis connection
-	redisHost := getEnv("REDIS_HOST", "localhost")
-	redisPort := getEnv("REDIS_PORT", "6379")
-	redisAddr := fmt.Sprintf("%s:%s", redisHost, redisPort)
-	redisService := NewRedisService(redisAddr)
+	// Initialize Redis from `redis_service.go`
+	redisService := InitRedis()
 
+	// Setup routes
 	r := chi.NewRouter()
 	r.Get("/", readRoot)
 	r.Get("/health", healthCheck)
@@ -126,6 +94,6 @@ func main() {
 	r.Get("/get/{key}", redisService.getKey)
 	r.Get("/multiply/{a}/{b}", multiply)
 
-	fmt.Println("Server running on port 8000")
+	fmt.Println("Server running on port 8000 per Kubernetes manifest")
 	log.Fatal(http.ListenAndServe(":8000", r))
 }

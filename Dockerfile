@@ -1,6 +1,6 @@
 # Uses a multi-stage build – Keeps the final image small and clean.
 # Removes Go compiler from the final image – Reduces attack surface.
-# Uses Distroless (gcr.io/distroless/base-debian10) – More secure, removes shell access.
+# Uses Distroless (gcr.io/distroless/base-debian12) – More secure, removes shell access.
 # Efficient caching – First copies go.mod & go.sum, then downloads dependencies separately.
 
 # We use Distroless because security is a top priority:

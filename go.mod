@@ -5,6 +5,7 @@ go 1.24
 require (
 	github.com/alicebob/miniredis/v2 v2.34.0
 	github.com/go-chi/chi/v5 v5.2.1
+	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/stretchr/testify v1.10.0
 )
