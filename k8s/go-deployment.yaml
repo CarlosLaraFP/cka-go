@@ -19,7 +19,7 @@ spec:
         app: go
         type: stateless
     spec:
-      priorityClassName: high-priority  # Scheduling Queue (PrioritySort plugin(s)) -> Filtering (NodeResourcesFit, NodeName, NodeUnschedulable) -> Scoring (NodeResourcesFit, ImageLocality) -> Binding (DefaultBinder)
+      priorityClassName: high-priority  # Scheduling Queue (PrioritySort) -> Filtering (NodeResourcesFit, NodeName, NodeUnschedulable) -> Scoring (NodeResourcesFit, ImageLocality) -> Binding (DefaultBinder) | these plugins have extension points
       containers:
       - name: go
         image: go-app:latest

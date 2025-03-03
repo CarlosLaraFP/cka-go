@@ -1,0 +1,19 @@
+apiVersion: kubescheduler.config.k8s.io/v1
+kind: KubeSchedulerConfiguration
+profiles:  # multiple scheduler profiles run in the same process
+- schedulerName: my-scheduler
+  plugins:
+    score:
+      disabled:
+        - name: TaintToleration
+      enabled:
+        - name: MyCustomPluginA
+        - name: MyCustomPluginB
+- schedulerName: my-scheduler-1
+  plugins:
+    preScore:
+      disabled:
+        - name: '*'
+    score:
+      enabled:
+        - name: '*'
