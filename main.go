@@ -96,4 +96,10 @@ func main() {
 
 	fmt.Println("Server running on port 8000 per Kubernetes manifest")
 	log.Fatal(http.ListenAndServe(":8000", r))
+
+	// In Go, := is for declaration + assignment, whereas = is for assignment only.
+	// var is for declaration of 1+ variables.
+	// If an initializer is present, the type can be omitted; the variable will take the type of the initializer.
+	// Inside a function, the := short assignment statement can be used in place of a var declaration with implicit type.
+	// Outside a function, every statement begins with a keyword (var, func, and so on) and so the := construct is not available.
 }
