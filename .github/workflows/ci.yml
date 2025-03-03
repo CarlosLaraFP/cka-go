@@ -57,6 +57,7 @@ jobs:
 
       - name: Apply Kubernetes Manifests
         run: |
+          kubectl label node kind-cluster-control-plane size=Large
           kubectl apply -f k8s/redis-deployment.yaml
           kubectl apply -f k8s/go-deployment.yaml
 
