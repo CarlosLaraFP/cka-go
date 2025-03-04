@@ -22,12 +22,14 @@ spec:
       containers:
       - name: go
         image: go-app:latest
-        imagePullPolicy: IfNotPresent  # "Always" tries to pull go-app:latest from Docker Hub rather than KinD
+        imagePullPolicy: IfNotPresent  # "Always" (prod) tries to pull go-app:latest from Docker Hub rather than KinD
         envFrom:  # environment variables
         - configMapRef:
             name: redis-config  # kubectl create -f redis-config.yaml
         - configMapRef:
             name: main-config  # kubectl create -f main-config.yaml
+        - secretRef:
+            name: app-secret
         ports:
         - containerPort: 8000
         readinessProbe:  # Ensure app is ready before marking as available
