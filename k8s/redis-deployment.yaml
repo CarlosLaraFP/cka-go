@@ -13,6 +13,7 @@ spec:
         app: redis
         type: stateful
     spec:
+      priorityClassName: high-priority  # Scheduling Queue (PrioritySort) -> Filtering (NodeResourcesFit, NodeName, NodeUnschedulable) -> Scoring (NodeResourcesFit, ImageLocality) -> Binding (DefaultBinder) | these plugins have extension points
       containers:
       - name: redis
         image: redis:7.0  # Use the latest stable Redis version

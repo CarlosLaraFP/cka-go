@@ -5,7 +5,7 @@ metadata:
 spec:
   replicas: 2
   strategy:
-    type: RollingUpdate
+    type: RollingUpdate  # default deployment strategy
     rollingUpdate:
       maxUnavailable: 0  # Ensure no downtime (0 pods can be unavailable during update)
       maxSurge: 1        # Allow only 1 extra pod above desired replicas during update
@@ -19,11 +19,15 @@ spec:
         app: go
         type: stateless
     spec:
-      priorityClassName: high-priority  # Scheduling Queue (PrioritySort) -> Filtering (NodeResourcesFit, NodeName, NodeUnschedulable) -> Scoring (NodeResourcesFit, ImageLocality) -> Binding (DefaultBinder) | these plugins have extension points
       containers:
       - name: go
         image: go-app:latest
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent  # "Always" tries to pull go-app:latest from Docker Hub rather than KinD
+        envFrom:  # environment variables
+        - configMapRef:
+            name: redis-config  # kubectl create -f redis-config.yaml
+        - configMapRef:
+            name: main-config  # kubectl create -f main-config.yaml
         ports:
         - containerPort: 8000
         readinessProbe:  # Ensure app is ready before marking as available
@@ -45,11 +49,6 @@ spec:
           limits:
             cpu: "500m"   # Limit to 0.5 CPU cores
             memory: "256Mi"  # Limit to 256MB RAM
-        env:  # environment variables
-        - name: REDIS_HOST
-          value: "redis-service"  # Service name from redis-deployment.yaml
-        - name: REDIS_PORT
-          value: "6379"  # Port from redis-deployment.yaml
 
 ---
 apiVersion: v1

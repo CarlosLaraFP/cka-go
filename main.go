@@ -94,7 +94,9 @@ func main() {
 	r.Get("/get/{key}", redisService.getKey)
 	r.Get("/multiply/{a}/{b}", multiply)
 
-	fmt.Println("Server running on port 8000 per Kubernetes manifest")
+	containerPort := getEnv("CONTAINER_PORT", "8000")
+
+	fmt.Printf("Server running on port %s per Kubernetes manifest\n", containerPort)
 	log.Fatal(http.ListenAndServe(":8000", r))
 
 	// In Go, := is for declaration + assignment, whereas = is for assignment only.
