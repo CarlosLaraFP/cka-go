@@ -103,3 +103,50 @@ func RomanToInt(s string) int {
 
 	return sum
 }
+
+/*
+Write a function to find the longest common prefix string amongst an array of strings.
+If there is no common prefix, return an empty string "".
+
+Example 1:
+Input: strs = ["flower","flow","flight"]
+Output: "fl"
+
+Example 2:
+Input: strs = ["dog","racecar","car"]
+Output: ""
+Explanation: There is no common prefix among the input strings.
+
+Time complexity: O(N * M) worst case
+Space complexity: O(N)
+*/
+func LongestCommonPrefix(strs []string) string {
+	wordIndex := 0
+	charIndex := 0
+	var commonPrefix []byte
+	var currentChar byte = 0
+
+	for {
+		word := strs[wordIndex]
+		if charIndex >= len(word) {
+			return string(commonPrefix)
+		}
+		char := word[charIndex]
+
+		if currentChar == 0 {
+			currentChar = char
+		} else if currentChar != char {
+			return string(commonPrefix)
+		}
+
+		wordIndex++
+
+		// if we already went through all the words, proceed to the next character
+		if wordIndex == len(strs) {
+			commonPrefix = append(commonPrefix, currentChar)
+			wordIndex = 0
+			charIndex++
+			currentChar = 0
+		}
+	}
+}

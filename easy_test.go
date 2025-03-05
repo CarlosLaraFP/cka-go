@@ -31,3 +31,12 @@ func TestRomanToInt(t *testing.T) {
 	assert.Equal(t, 400, RomanToInt("CD"))
 	assert.Equal(t, 900, RomanToInt("CM"))
 }
+
+func TestLongestCommonPrefix(t *testing.T) {
+	assert.Equal(t, "fl", LongestCommonPrefix([]string{"flower", "flow", "flight"}))
+	assert.Equal(t, "", LongestCommonPrefix([]string{"dog", "racecar", "car"}))
+	assert.Equal(t, "", LongestCommonPrefix([]string{""}))
+	assert.Equal(t, "", LongestCommonPrefix([]string{"", ""}))
+	assert.Equal(t, "cat", LongestCommonPrefix([]string{"cat"}))
+	assert.Equal(t, "a", LongestCommonPrefix([]string{"ab", "a"}))
+}
