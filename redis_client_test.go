@@ -18,8 +18,6 @@ Unit Tests			  Mock Redis
 Integration Tests	  Use a Real Redis Instance
 */
 
-// go test ./... -v
-
 // Mock Redis test
 func TestRedisConnection(t *testing.T) {
 	ctx := context.Background()

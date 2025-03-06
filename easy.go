@@ -1,5 +1,9 @@
 package main
 
+import "golang.org/x/exp/constraints"
+
+// go test ./... -v
+
 /*
 Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target. In Go, we use slices.
 You may assume that each input would have exactly one solution, and you may not use the same element twice.
@@ -149,4 +153,37 @@ func LongestCommonPrefix(strs []string) string {
 			currentChar = 0
 		}
 	}
+}
+
+/*
+You are given the heads of two sorted linked lists list1 and list2.
+Merge the two lists into one sorted list. The list should be made by splicing together the nodes of the first two lists.
+Return the head of the merged linked list.
+*/
+func MergeTwoLists[T constraints.Ordered](list1 *ListNode[T], list2 *ListNode[T]) *ListNode[T] {
+	// Create a dummy node to simplify the merging process
+	dummy := &ListNode[T]{}
+	current := dummy
+
+	// Traverse both lists and merge them
+	for list1 != nil && list2 != nil {
+		if list1.Val <= list2.Val {
+			current.Next = list1
+			list1 = list1.Next
+		} else {
+			current.Next = list2
+			list2 = list2.Next
+		}
+		current = current.Next
+	}
+
+	// Attach the remaining nodes from list1 or list2
+	if list1 != nil {
+		current.Next = list1
+	} else {
+		current.Next = list2
+	}
+
+	// Return the head of the merged list
+	return dummy.Next
 }
