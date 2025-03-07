@@ -198,7 +198,11 @@ Change the array nums such that the first k elements of nums contain the unique 
 The remaining elements of nums are not important as well as the size of nums. Return k.
 */
 func RemoveDuplicates(nums []int) int {
-	index := 1
+	// 1) always compare the current value and the previous value
+	// 2) if the numbers are the same, stop incrementing the replacement index
+	// 3) if the numbers are different, replace the index value with the current value
+	// Example: 1, 2, 2, 3
+	index := 1 // minimum starting replacement index
 
 	for i := 1; i < len(nums); i++ {
 		if nums[i] != nums[i-1] {
