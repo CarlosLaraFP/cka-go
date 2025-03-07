@@ -19,9 +19,11 @@ spec:
         app: go
         type: stateless
     spec:
+      #imagePullSecrets:
+      #- name: my-credentials  # log into ECR
       containers:
       - name: go
-        image: go-app:latest
+        image: go-app:latest  # provide full path if pulling from ECR
         imagePullPolicy: IfNotPresent  # "Always" (prod) tries to pull go-app:latest from Docker Hub rather than KinD
         envFrom:  # environment variables
         - configMapRef:
