@@ -1,6 +1,10 @@
 package main
 
-import "golang.org/x/exp/constraints"
+import (
+	"cmp"
+
+	"golang.org/x/exp/constraints"
+)
 
 /*
 constraints.Integer: Includes all integer types (int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64).
@@ -11,7 +15,7 @@ type Numeric interface {
 }
 
 // ListNode is a generic type
-type ListNode[T constraints.Ordered] struct {
+type ListNode[T cmp.Ordered] struct {
 	Val  T
 	Next *ListNode[T]
 }

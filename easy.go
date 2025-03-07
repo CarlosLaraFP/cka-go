@@ -1,6 +1,8 @@
 package main
 
-import "golang.org/x/exp/constraints"
+import (
+	"cmp"
+)
 
 // go test ./... -v
 
@@ -160,7 +162,7 @@ You are given the heads of two sorted linked lists list1 and list2.
 Merge the two lists into one sorted list. The list should be made by splicing together the nodes of the first two lists.
 Return the head of the merged linked list.
 */
-func MergeTwoLists[T constraints.Ordered](list1 *ListNode[T], list2 *ListNode[T]) *ListNode[T] {
+func MergeTwoLists[T cmp.Ordered](list1 *ListNode[T], list2 *ListNode[T]) *ListNode[T] {
 	// Create a dummy node to simplify the merging process
 	dummy := &ListNode[T]{}
 	current := dummy
@@ -186,4 +188,25 @@ func MergeTwoLists[T constraints.Ordered](list1 *ListNode[T], list2 *ListNode[T]
 
 	// Return the head of the merged list
 	return dummy.Next
+}
+
+/*
+Given an integer array nums sorted in non-decreasing order, remove the duplicates in-place such that each unique element appears only once.
+The relative order of the elements should be kept the same. Then return the number of unique elements in nums.
+Consider the number of unique elements of nums to be k, to get accepted, you need to do the following things:
+Change the array nums such that the first k elements of nums contain the unique elements in the order they were present in nums initially.
+The remaining elements of nums are not important as well as the size of nums. Return k.
+*/
+func RemoveDuplicates(nums []int) int {
+	index := 1
+
+	for i := 1; i < len(nums); i++ {
+		if nums[i] != nums[i-1] {
+			nums[index] = nums[i] // index and i are the same under normal sequence
+			index++
+		}
+		// if previous == current, do not increment index
+	}
+
+	return index
 }

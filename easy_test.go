@@ -3,8 +3,9 @@ package main
 import (
 	"testing"
 
+	"cmp"
+
 	"github.com/stretchr/testify/assert"
-	"golang.org/x/exp/constraints"
 )
 
 func TestTwoSum(t *testing.T) {
@@ -43,7 +44,7 @@ func TestLongestCommonPrefix(t *testing.T) {
 }
 
 // Helper function to create a linked list from a slice
-func createList[T constraints.Ordered](values []T) *ListNode[T] {
+func createList[T cmp.Ordered](values []T) *ListNode[T] {
 	if len(values) == 0 {
 		return nil
 	}
@@ -57,7 +58,7 @@ func createList[T constraints.Ordered](values []T) *ListNode[T] {
 }
 
 // Helper function to convert a linked list to a slice
-func listToSlice[T constraints.Ordered](head *ListNode[T]) []T {
+func listToSlice[T cmp.Ordered](head *ListNode[T]) []T {
 	var result []T
 	for head != nil {
 		result = append(result, head.Val)
@@ -101,4 +102,13 @@ func equalSlices[T comparable](a, b []T) bool {
 		}
 	}
 	return true
+}
+
+func TestRemoveDuplicates(t *testing.T) {
+	assert.Equal(t, 1, RemoveDuplicates([]int{-1}))
+	assert.Equal(t, 3, RemoveDuplicates([]int{-1, 0, 1}))
+	assert.Equal(t, 3, RemoveDuplicates([]int{1, 2, 2, 3}))
+	assert.Equal(t, 5, RemoveDuplicates([]int{1, 2, 2, 3, 4, 5}))
+	assert.Equal(t, 5, RemoveDuplicates([]int{1, 2, 2, 3, 4, 4, 5}))
+	assert.Equal(t, 5, RemoveDuplicates([]int{1, 2, 2, 3, 4, 4, 5, 5, 5}))
 }
