@@ -5,14 +5,30 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      role: db
+      app: redis
+  # NetworkPolicy operates at the Pod level, not the Service level. This means the policy 
+  # will still work as long as the traffic originates from the Go Pod and is destined for 
+  # the Redis Pod, even if it passes through the ClusterIP Service.
   policyTypes:
   - Ingress
+  - Egress  # i.e. to a backup server
   ingress:
-  - from:
+  - from:  # (podSelector && namespaceSelector) || ipBlock
     - podSelector:
         matchLabels:
-          name: go-pod
+          app: go
+      namespaceSelector:  # this can also be its own element: podSelector || namespaceSelector || ipBlock
+        matchLabels:
+          name: default
+    - ipBlock:
+        cidr: 192.168.5.10/32
     ports:
     - protocol: TCP
-      port: 3306
+      port: 6379
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 192.168.5.10/32
+    ports:
+    - protocol: TCP
+      port: 80
