@@ -221,26 +221,23 @@ Input: haystack = "sadbutsad", needle = "sad" | Output: 0
 Input: haystack = "leetcode", needle = "leeto" | Output: -1
 */
 func FirstOcurrence(haystack string, needle string) int {
-	if len(needle) > len(haystack) {
-		return -1
-	}
 	haystackIndex := 0
 	needleIndex := 0
 	firstIndex := -1
 
-	// "miss|issip|p|i", "issip|i|"
 	for haystackIndex < len(haystack) && needleIndex < len(needle) {
 		if haystack[haystackIndex] != needle[needleIndex] {
-			haystackIndex = haystackIndex - needleIndex
-			needleIndex = 0
-			firstIndex = -1
+			haystackIndex = haystackIndex - needleIndex // reset index for a new attempt starting 1 char ahead
+			needleIndex = 0                             // restart search
+			firstIndex = -1                             // not found
 		} else {
+			// set a new index only if we can still fit in the needle
 			if len(haystack)-haystackIndex >= len(needle) {
 				firstIndex = haystackIndex - needleIndex
 			}
 			needleIndex++
 		}
-		haystackIndex++
+		haystackIndex++ // haystack index always increments
 	}
 
 	return firstIndex
