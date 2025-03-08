@@ -253,10 +253,23 @@ func FirstOcurrence(haystack string, needle string) int {
 }
 
 /*
-You are given a large integer represented as an integer array digits, where each digits[i] is the ith digit of the integer.
-The digits are ordered from most significant to least significant in left-to-right order. The large integer does not contain any leading 0's.
+You are given a large integer represented as an integer array digits, where each digits[i]
+is the ith digit of the integer. The digits are ordered from most significant to least
+significant in left-to-right order. The large integer does not contain any leading 0's.
 Increment the large integer by one and return the resulting array of digits.
 */
 func PlusOne(digits []int) []int {
+	for i := len(digits) - 1; i >= 0; i-- {
+		if i == 0 && digits[i] == 9 {
+			digits[i] = 1
+			digits = append(digits, 0)
+		} else if digits[i] == 9 {
+			digits[i] = 0
+		} else {
+			digits[i] = digits[i] + 1
+			break
+		}
+	}
 
+	return digits
 }

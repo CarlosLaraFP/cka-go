@@ -4,7 +4,7 @@ metadata:
   name: aws-storage
 provisioner: ebs.csi.aws.com
 volumeBindingMode: WaitForFirstConsumer
-parameters:
+parameters:  # specific to the provisioner (i.e. AWS EBS)
   csi.storage.k8s.io/fstype: xfs
   type: io1
   iopsPerGB: "50"

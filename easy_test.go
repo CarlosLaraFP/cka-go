@@ -121,3 +121,12 @@ func TestFirstOcurrence(t *testing.T) {
 	assert.Equal(t, 4, FirstOcurrence("mississippi", "issip"))
 	assert.Equal(t, -1, FirstOcurrence("mississippi", "issipi"))
 }
+
+// 9999 -> 10000
+func TestPlusOne(t *testing.T) {
+	assert.Equal(t, []int{1, 2, 3, 5}, PlusOne([]int{1, 2, 3, 4}))
+	assert.Equal(t, []int{1, 2, 4, 0}, PlusOne([]int{1, 2, 3, 9}))
+	assert.Equal(t, []int{1, 0, 0, 0, 0}, PlusOne([]int{9, 9, 9, 9}))
+	assert.Equal(t, []int{1, 1, 0, 0}, PlusOne([]int{1, 0, 9, 9}))
+	assert.Equal(t, []int{1, 0}, PlusOne([]int{9}))
+}

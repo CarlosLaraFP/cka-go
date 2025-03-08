@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: first-pvc
+  name: first-pvc  # we can choose a specific class of storage (i.e. Bronze, Silver, Gold)
 spec:
   accessModes:
     - ReadWriteOnce
