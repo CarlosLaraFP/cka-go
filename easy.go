@@ -219,8 +219,17 @@ func RemoveDuplicates(nums []int) int {
 Given two strings needle and haystack, return the index of the first occurrence of needle in haystack, or -1 if needle is not part of haystack.
 Input: haystack = "sadbutsad", needle = "sad" | Output: 0
 Input: haystack = "leetcode", needle = "leeto" | Output: -1
+
+	for i := 0; i+len(needle) <= len(haystack); i++ {
+		if haystack[i:i+len(needle)] == needle {
+			return i
+		}
+	}
+
+	return -1
 */
 func FirstOcurrence(haystack string, needle string) int {
+	// Refer to simple solution above
 	haystackIndex := 0
 	needleIndex := 0
 	firstIndex := -1
@@ -241,4 +250,13 @@ func FirstOcurrence(haystack string, needle string) int {
 	}
 
 	return firstIndex
+}
+
+/*
+You are given a large integer represented as an integer array digits, where each digits[i] is the ith digit of the integer.
+The digits are ordered from most significant to least significant in left-to-right order. The large integer does not contain any leading 0's.
+Increment the large integer by one and return the resulting array of digits.
+*/
+func PlusOne(digits []int) []int {
+
 }
