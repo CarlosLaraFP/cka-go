@@ -1,16 +1,16 @@
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition  # without a custom controller, this resource is simply stored in ETCD
 metadata:
-  name: aws.resource.com
+  name: booking.flights.com
 spec:
   scope: Namespaced
-  group: resource.com
+  group: flights.com
   names:
-    kind: MyResource
-    singular: myresource
-    plural: myresources
+    kind: FlightTicket
+    singular: flightticket
+    plural: flighttickets
     shortnames:
-      - mr
+      - ft
   versions:
     - name: v1
       served: true

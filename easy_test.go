@@ -112,3 +112,12 @@ func TestRemoveDuplicates(t *testing.T) {
 	assert.Equal(t, 5, RemoveDuplicates([]int{1, 2, 2, 3, 4, 4, 5}))
 	assert.Equal(t, 5, RemoveDuplicates([]int{1, 2, 2, 3, 4, 4, 5, 5, 5}))
 }
+
+func TestFirstOcurrence(t *testing.T) {
+	assert.Equal(t, -1, FirstOcurrence("haystack", "needle"))
+	assert.Equal(t, 0, FirstOcurrence("leetcode", "leet"))
+	assert.Equal(t, 0, FirstOcurrence("leetcodeleetcode", "leet"))
+	assert.Equal(t, -1, FirstOcurrence("leet", "leetcode"))
+	assert.Equal(t, 4, FirstOcurrence("mississippi", "issip"))
+	assert.Equal(t, -1, FirstOcurrence("mississippi", "issipi"))
+}

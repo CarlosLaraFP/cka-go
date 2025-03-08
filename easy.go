@@ -214,3 +214,34 @@ func RemoveDuplicates(nums []int) int {
 
 	return index
 }
+
+/*
+Given two strings needle and haystack, return the index of the first occurrence of needle in haystack, or -1 if needle is not part of haystack.
+Input: haystack = "sadbutsad", needle = "sad" | Output: 0
+Input: haystack = "leetcode", needle = "leeto" | Output: -1
+*/
+func FirstOcurrence(haystack string, needle string) int {
+	if len(needle) > len(haystack) {
+		return -1
+	}
+	haystackIndex := 0
+	needleIndex := 0
+	firstIndex := -1
+
+	// "miss|issip|p|i", "issip|i|"
+	for haystackIndex < len(haystack) && needleIndex < len(needle) {
+		if haystack[haystackIndex] != needle[needleIndex] {
+			haystackIndex = haystackIndex - needleIndex
+			needleIndex = 0
+			firstIndex = -1
+		} else {
+			if len(haystack)-haystackIndex >= len(needle) {
+				firstIndex = haystackIndex - needleIndex
+			}
+			needleIndex++
+		}
+		haystackIndex++
+	}
+
+	return firstIndex
+}
