@@ -273,3 +273,25 @@ func PlusOne(digits []int) []int {
 
 	return digits
 }
+
+/*
+The square root of a number is the number which when multiplied by itself gives the first number.
+Given a non-negative integer x, return the square root of x rounded down to the nearest integer.
+The returned integer should be non-negative as well.
+You must not use any built-in exponent function or operator.
+*/
+func MySqrt(x int) int {
+	start, end := 0, x+1
+
+	for start < end {
+		mid := start + (end-start)/2
+
+		if mid*mid > x {
+			end = mid
+		} else {
+			start = mid + 1
+		}
+	}
+
+	return start - 1
+}

@@ -130,3 +130,13 @@ func TestPlusOne(t *testing.T) {
 	assert.Equal(t, []int{1, 1, 0, 0}, PlusOne([]int{1, 0, 9, 9}))
 	assert.Equal(t, []int{1, 0}, PlusOne([]int{9}))
 }
+
+func TestMySqrt(t *testing.T) {
+	assert.Equal(t, 2, MySqrt(4))
+	assert.Equal(t, 2, MySqrt(8))
+	assert.Equal(t, 5, MySqrt(27))
+	assert.Equal(t, 9, MySqrt(81))
+	assert.Equal(t, 0, MySqrt(0))
+	assert.Equal(t, 15740, MySqrt(247776352))
+	assert.Equal(t, 46339, MySqrt(2147395599))
+}
