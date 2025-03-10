@@ -30,8 +30,8 @@ spec:
             name: redis-config  # kubectl create -f redis-config.yaml
         - configMapRef:
             name: main-config  # kubectl create -f main-config.yaml
-        - secretRef:
-            name: app-secret
+        #- secretRef:
+        #    name: app-secret
         ports:
         - containerPort: 8000
         readinessProbe:  # Ensure app is ready before marking as available
