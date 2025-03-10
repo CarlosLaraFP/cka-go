@@ -163,10 +163,13 @@ func TestTreeDepth(t *testing.T) {
 func TestInorderTraversal(t *testing.T) {
 	a := &Tree[int]{Val: 1, Left: nil, Right: nil}
 	assert.Equal(t, []int{1}, InorderTraversal(a))
+	assert.Equal(t, []int{1}, InorderTraversalIterative(a))
 	b := &Tree[int]{Val: 5, Left: &Tree[int]{Val: 4}}
 	assert.Equal(t, []int{4, 5}, InorderTraversal(b))
+	assert.Equal(t, []int{4, 5}, InorderTraversalIterative(b))
 	c := &Tree[int]{Val: 2, Left: a, Right: b}
 	assert.Equal(t, []int{1, 2, 4, 5}, InorderTraversal(c))
+	assert.Equal(t, []int{1, 2, 4, 5}, InorderTraversalIterative(c))
 	d := &Tree[int]{
 		Val: 1,
 		Left: &Tree[int]{
@@ -177,4 +180,5 @@ func TestInorderTraversal(t *testing.T) {
 		Right: &Tree[int]{Val: 3, Right: b},
 	}
 	assert.Equal(t, []int{1, 4, 2, 5, 1, 3, 4, 5}, InorderTraversal(d))
+	assert.Equal(t, []int{1, 4, 2, 5, 1, 3, 4, 5}, InorderTraversalIterative(d))
 }

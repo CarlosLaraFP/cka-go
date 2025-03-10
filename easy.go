@@ -322,10 +322,39 @@ func InorderTraversal[T comparable](root *Tree[T]) []T {
 		return make([]T, 0)
 	}
 	// go leftmost first
-	left := InorderTraversal(root.Left)
-	left = append(left, root.Val)
-	right := InorderTraversal(root.Right)
-	return append(left, right...)
+	left := append(InorderTraversal(root.Left), root.Val)
+	return append(left, InorderTraversal(root.Right)...)
+}
+
+/*
+A stack is used to simulate the recursion.
+The algorithm traverses to the leftmost node, processes it, and then moves to the right subtree.
+Time Complexity:
+O(n): Each node is visited once.
+Space Complexity:
+O(n): For the output slice.
+O(h): For the stack, where h is the height of the tree.
+*/
+func InorderTraversalIterative[T comparable](root *Tree[T]) []T {
+	result := make([]T, 0)
+	stack := make([]*Tree[T], 0)
+	current := root
+
+	for current != nil || len(stack) > 0 {
+		// Traverse to the leftmost node
+		for current != nil {
+			stack = append(stack, current)
+			current = current.Left
+		}
+		// Process the current node
+		current = stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		result = append(result, current.Val)
+		// Move to the right subtree
+		current = current.Right
+	}
+
+	return result
 }
 
 // go test ./... -v
