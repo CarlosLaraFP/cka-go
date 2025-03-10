@@ -313,4 +313,19 @@ func TreeDepth[T comparable](root *Tree[T]) int {
 	return rightDepth + 1
 }
 
+/*
+Given the root of a binary tree, return the inorder traversal of its nodes' values.
+Inorder means from left to right at each breadth level.
+*/
+func InorderTraversal[T comparable](root *Tree[T]) []T {
+	if root == nil {
+		return make([]T, 0)
+	}
+	// go leftmost first
+	left := InorderTraversal(root.Left)
+	left = append(left, root.Val)
+	right := InorderTraversal(root.Right)
+	return append(left, right...)
+}
+
 // go test ./... -v
