@@ -140,3 +140,22 @@ func TestMySqrt(t *testing.T) {
 	assert.Equal(t, 15740, MySqrt(247776352))
 	assert.Equal(t, 46339, MySqrt(2147395599))
 }
+
+func TestTreeDepth(t *testing.T) {
+	a := &Tree[int]{Val: 5, Left: nil, Right: nil}
+	assert.Equal(t, 1, TreeDepth(a))
+	b := &Tree[int]{Val: 5, Left: &Tree[int]{Val: 5, Left: nil, Right: nil}, Right: nil}
+	assert.Equal(t, 2, TreeDepth(b))
+	c := &Tree[int]{Val: 5, Left: a, Right: b}
+	assert.Equal(t, 3, TreeDepth(c))
+	d := &Tree[int]{
+		Val: 1,
+		Left: &Tree[int]{
+			Val:   2,
+			Left:  &Tree[int]{Val: 4, Left: a},
+			Right: &Tree[int]{Val: 5},
+		},
+		Right: &Tree[int]{Val: 3, Right: b},
+	}
+	assert.Equal(t, 4, TreeDepth(d))
+}

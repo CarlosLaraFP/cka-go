@@ -4,8 +4,6 @@ import (
 	"cmp"
 )
 
-// go test ./... -v
-
 /*
 Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target. In Go, we use slices.
 You may assume that each input would have exactly one solution, and you may not use the same element twice.
@@ -281,17 +279,38 @@ The returned integer should be non-negative as well.
 You must not use any built-in exponent function or operator.
 */
 func MySqrt(x int) int {
-	start, end := 0, x+1
-
+	// no floats at all
+	start, end := 0, x+1 // it doesn't hurt to extend the end slightly in exchange for taking care of the zero case
+	// when start equals end, no more progress can be made
 	for start < end {
 		mid := start + (end-start)/2
 
 		if mid*mid > x {
 			end = mid
 		} else {
-			start = mid + 1
+			start = mid + 1 // otherwise keeps bouncing back and forth
 		}
 	}
 
-	return start - 1
+	return start - 1 // always an integer higher
 }
+
+/*
+TreeDepth finds the depth of a binary tree.
+*/
+func TreeDepth[T comparable](root *Tree[T]) int {
+	if root == nil {
+		return 0
+	}
+
+	leftDepth := TreeDepth(root.Left)
+	rightDepth := TreeDepth(root.Right)
+
+	// + 1 accounts for the current node
+	if leftDepth > rightDepth {
+		return leftDepth + 1
+	}
+	return rightDepth + 1
+}
+
+// go test ./... -v

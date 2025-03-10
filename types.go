@@ -28,6 +28,13 @@ type ListNode[T cmp.Ordered] struct {
 	Next *ListNode[T]
 }
 
+// Tree used for binary tree algorithms
+type Tree[T comparable] struct {
+	Val   T
+	Left  *Tree[T]
+	Right *Tree[T]
+}
+
 // Index (generic function) returns the index of x in s, or -1 if not found.
 func Index[T comparable](s []T, x T) int {
 	for i, v := range s {
