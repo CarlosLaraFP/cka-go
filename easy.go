@@ -373,4 +373,22 @@ func helper[T comparable](left *Tree[T], right *Tree[T]) bool {
 	return helper(left.Left, right.Right) && helper(left.Right, right.Left)
 }
 
+/*
+ */
+func IsSymmetricIterative[T comparable](root *Tree[T]) bool {
+	stack := make([]*Tree[T], 0)
+	stack = append(stack, root.Left, root.Right)
+	for len(stack) > 0 {
+		left, right := stack[0], stack[1]
+		stack = stack[2:]
+		if left == nil && right == nil {
+			continue
+		} else if (left == nil && right != nil) || left != nil && right == nil || left.Val != right.Val {
+			return false
+		}
+		stack = append(stack, left.Left, right.Right, left.Right, right.Left)
+	}
+	return true
+}
+
 // go test ./... -v
