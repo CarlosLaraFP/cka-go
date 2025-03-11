@@ -357,4 +357,20 @@ func InorderTraversalIterative[T comparable](root *Tree[T]) []T {
 	return result
 }
 
+/*
+Given the root of a binary tree, check whether it is a mirror of itself (i.e., symmetric around its center).
+*/
+func IsSymmetric[T comparable](root *Tree[T]) bool {
+	return helper(root.Left, root.Right)
+}
+func helper[T comparable](left *Tree[T], right *Tree[T]) bool {
+	if left == nil || right == nil {
+		return left == right
+	}
+	if left.Val != right.Val {
+		return false
+	}
+	return helper(left.Left, right.Right) && helper(left.Right, right.Left)
+}
+
 // go test ./... -v

@@ -182,3 +182,36 @@ func TestInorderTraversal(t *testing.T) {
 	assert.Equal(t, []int{1, 4, 2, 5, 1, 3, 4, 5}, InorderTraversal(d))
 	assert.Equal(t, []int{1, 4, 2, 5, 1, 3, 4, 5}, InorderTraversalIterative(d))
 }
+
+func TestIsSymmetric(t *testing.T) {
+	a := &Tree[int]{Val: 1}
+	assert.Equal(t, true, IsSymmetric(a))
+	b := &Tree[int]{Val: 5, Left: &Tree[int]{Val: 4}}
+	assert.Equal(t, false, IsSymmetric(b))
+	c := &Tree[int]{Val: 2, Left: a, Right: &Tree[int]{Val: 1}}
+	assert.Equal(t, true, IsSymmetric(c))
+	d := &Tree[int]{
+		Val: 1,
+		Left: &Tree[int]{
+			Val:   2,
+			Left:  &Tree[int]{Val: 4, Left: a},
+			Right: &Tree[int]{Val: 5},
+		},
+		Right: &Tree[int]{Val: 3, Right: b},
+	}
+	assert.Equal(t, false, IsSymmetric(d))
+	e := &Tree[int]{
+		Val: 1,
+		Left: &Tree[int]{
+			Val:   2,
+			Left:  &Tree[int]{Val: 4, Left: &Tree[int]{Val: 1}},
+			Right: &Tree[int]{Val: 5},
+		},
+		Right: &Tree[int]{
+			Val:   2,
+			Left:  &Tree[int]{Val: 5},
+			Right: &Tree[int]{Val: 4, Right: &Tree[int]{Val: 1}},
+		},
+	}
+	assert.Equal(t, true, IsSymmetric(e))
+}
