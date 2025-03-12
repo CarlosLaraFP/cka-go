@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: zwaby-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:region:account-id:certificate/certificate-id
+spec:
+  rules:
+  - host: www.zwaby.com # Change this to the AWS Route 53 domain
+    http:
+      paths:
+      - path: /home
+        pathType: Prefix
+        backend:
+          service:
+            name: home-service
+            port:
+              number: 80
+      - path: /playground
+        pathType: Prefix
+        backend:
+          service:
+            name: playground-service
+            port:
+              number: 80

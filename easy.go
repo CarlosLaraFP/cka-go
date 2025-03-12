@@ -363,7 +363,7 @@ Given the root of a binary tree, check whether it is a mirror of itself (i.e., s
 func IsSymmetric[T comparable](root *Tree[T]) bool {
 	return helper(root.Left, root.Right)
 }
-func helper[T comparable](left *Tree[T], right *Tree[T]) bool {
+func helper[T comparable](left, right *Tree[T]) bool {
 	if left == nil || right == nil {
 		return left == right
 	}
@@ -374,21 +374,69 @@ func helper[T comparable](left *Tree[T], right *Tree[T]) bool {
 }
 
 /*
- */
+IsSymmetricIterative returns the same answer as above.
+Time Complexity:
+The algorithm visits each node exactly once, so the time complexity is O(n), where n is the number of nodes in the tree.
+Space Complexity:
+The queue stores nodes level by level. In the worst case (a complete binary tree),
+the queue will hold all nodes at the deepest level, which is approximately n/2 nodes. Thus, the space complexity is O(n).
+*/
 func IsSymmetricIterative[T comparable](root *Tree[T]) bool {
-	stack := make([]*Tree[T], 0)
-	stack = append(stack, root.Left, root.Right)
-	for len(stack) > 0 {
-		left, right := stack[0], stack[1]
-		stack = stack[2:]
-		if left == nil && right == nil {
+	queue := make([]*Tree[T], 0) // BFS FIFO
+	queue = append(queue, root.Left, root.Right)
+
+	for len(queue) > 0 {
+		l, r := queue[0], queue[1]
+		queue = queue[2:] // O(1)
+
+		if l == nil && r == nil {
 			continue
-		} else if (left == nil && right != nil) || left != nil && right == nil || left.Val != right.Val {
+		}
+		if l == nil || r == nil || l.Val != r.Val {
 			return false
 		}
-		stack = append(stack, left.Left, right.Right, left.Right, right.Left)
+
+		queue = append(queue, l.Left, r.Right, l.Right, r.Left)
 	}
+
 	return true
+}
+
+// SameTrees determines whether the trees t1 and t2 contain the same values.
+func SameTrees[T comparable](t1, t2 *Tree[T]) bool {
+	a := make(chan T)
+	b := make(chan T)
+	go walk(t1, a)
+	go walk(t2, b)
+	for {
+		v1, ok1 := <-a
+		v2, ok2 := <-b
+		// if both channels are closed, return true
+		if !ok1 && !ok2 {
+			return true
+		}
+		if !ok1 || !ok2 || v1 != v2 {
+			return false
+		}
+	}
+}
+
+// Walk (inorder traversal) walks the tree t sending all values from the tree to the channel ch.
+func walk[T comparable](t *Tree[T], ch chan T) {
+	stack := make([]*Tree[T], 0)
+	current := t
+
+	for current != nil || len(stack) > 0 {
+		for current != nil {
+			stack = append(stack, current)
+			current = current.Left
+		}
+		current = stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		ch <- current.Val
+		current = current.Right
+	}
+	close(ch)
 }
 
 // go test ./... -v
