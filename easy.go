@@ -425,6 +425,8 @@ func SameTrees[T comparable](t1, t2 *Tree[T]) bool {
 func walk[T comparable](t *Tree[T], ch chan T) {
 	stack := make([]*Tree[T], 0)
 	current := t
+	// used to schedule a function call to be executed just before the surrounding function returns (LIFO)
+	defer close(ch)
 
 	for current != nil || len(stack) > 0 {
 		for current != nil {
@@ -436,7 +438,7 @@ func walk[T comparable](t *Tree[T], ch chan T) {
 		ch <- current.Val
 		current = current.Right
 	}
-	close(ch)
+	//close(ch)
 }
 
 // go test ./... -v
