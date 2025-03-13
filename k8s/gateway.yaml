@@ -2,8 +2,9 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
   name: first-gateway
+  namespace: default
 spec:
-  gatewayClassName: first-class
+  gatewayClassName: aws-lb
   listeners:
   - name: http
     protocol: HTTP
