@@ -243,3 +243,35 @@ func TestSameTrees(t *testing.T) {
 	}
 	assert.Equal(t, true, SameTrees(e.Left, e.Right))
 }
+
+func TestMerge(t *testing.T) {
+	input := []int{1, 2, 0, 0}
+	result := []int{1, 2, 2, 3}
+	Merge(input, 2, []int{2, 3}, 2)
+	assert.Equal(t, result, input)
+
+	input = []int{7, 9, 0, 0}
+	result = []int{1, 2, 7, 9}
+	Merge(input, 2, []int{1, 2}, 2)
+	assert.Equal(t, result, input)
+
+	input = []int{7, 9, 10, 0, 0}
+	result = []int{1, 2, 7, 9, 10}
+	Merge(input, 3, []int{1, 2}, 2)
+	assert.Equal(t, result, input)
+
+	input = []int{}
+	result = []int{}
+	Merge(input, 0, []int{}, 0)
+	assert.Equal(t, result, input)
+
+	input = []int{1}
+	result = []int{1}
+	Merge(input, 1, []int{}, 0)
+	assert.Equal(t, result, input)
+
+	input = []int{1, 2, 3, 0, 0, 0}
+	result = []int{1, 2, 2, 3, 5, 6}
+	Merge(input, 3, []int{2, 5, 6}, 3)
+	assert.Equal(t, result, input)
+}
