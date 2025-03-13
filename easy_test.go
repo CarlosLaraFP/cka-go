@@ -274,4 +274,9 @@ func TestMerge(t *testing.T) {
 	result = []int{1, 2, 2, 3, 5, 6}
 	Merge(input, 3, []int{2, 5, 6}, 3)
 	assert.Equal(t, result, input)
+
+	input = []int{7, 8, 8, 0, 0}
+	result = []int{1, 2, 7, 8, 8}
+	Merge(input, 3, []int{1, 2}, 2)
+	assert.Equal(t, result, input)
 }

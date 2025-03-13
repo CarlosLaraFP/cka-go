@@ -448,19 +448,51 @@ Merge nums1 and nums2 into a single array sorted in non-decreasing order.
 The final sorted array should not be returned by the function, but instead be stored inside the array nums1.
 To accommodate this, nums1 has a length of m + n, where the first m elements denote the elements that
 should be merged, and the last n elements are set to 0 and should be ignored. nums2 has a length of n.
+Time complexity: O(m + n)
 */
 func Merge(nums1 []int, m int, nums2 []int, n int) {
-	p1, p2, index := m-1, n-1, m+n-1
-	for p2 >= 0 {
-		if p1 >= 0 && nums1[p1] > nums2[p2] {
-			nums1[index] = nums1[p1]
-			p1--
+	// index is the overwrite position, always with a number from one of the slices
+	// index increments at the end of every iteration because it was already processed
+	// index starts at the end to ensure full traversal; i only starts at the first replacement candidate
+	// starting backwards ensures the numbers end up in the appropriate descending order
+	// we break when there are no more numbers to process from the second slice
+	i, j, index := m-1, n-1, m+n-1
+	// 1, [2], 0, [0] | 2, [3]
+	// 7, 8, [8], 0, 0, [0] | 1, 2, [3]
+	// 1, 2, [3], 0, 0, [0] | 2, 5, [6]
+	for j >= 0 { // we are done until we finish merging the entire nums2
+		if i >= 0 && nums1[i] > nums2[j] {
+			nums1[index] = nums1[i]
+			i--
 		} else {
-			nums1[index] = nums2[p2]
-			p2--
+			nums1[index] = nums2[j]
+			j--
 		}
 		index--
 	}
+}
+
+/*
+You are climbing a staircase. It takes n steps to reach the top.
+Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?
+Example 1:
+
+Input: n = 2
+Output: 2
+Explanation: There are two ways to climb to the top.
+1. 1 step + 1 step
+2. 2 steps
+Example 2:
+
+Input: n = 3
+Output: 3
+Explanation: There are three ways to climb to the top.
+1. 1 step + 1 step + 1 step
+2. 1 step + 2 steps
+3. 2 steps + 1 step
+*/
+func climbStairs(n int) int {
+
 }
 
 // go test ./... -v

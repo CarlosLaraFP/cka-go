@@ -1,0 +1,21 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: first-gateway
+spec:
+  gatewayClassName: first-class
+  listeners:
+  - name: http
+    protocol: HTTP
+    port: 80
+  - name: https
+    port: 443
+    protocol: HTTPS
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        name: tls-secret
+      allowedRoutes:
+        kinds:
+        - kind: HTTPRoute
