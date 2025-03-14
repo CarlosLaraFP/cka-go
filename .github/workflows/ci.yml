@@ -86,7 +86,9 @@ jobs:
       
       - name: Test DNS Resolution
         run: |
-          kubectl exec -it $(kubectl get pods -l app=go -o jsonpath='{.items[0].metadata.name}') -- nslookup redis-service
+          kubectl exec -it $(kubectl get pods -l app=go -o jsonpath='{.items[0].metadata.name}') -- ping -c 4 redis-service
+          kubectl exec -it $(kubectl get pods -l app=go -o jsonpath='{.items[0].metadata.name}') -- curl -v redis-service:6379
+          kubectl run -i --tty --rm debug --image=busybox --restart=Never -- nslookup redis-service
 
       - name: Test API Endpoint
         run: |
