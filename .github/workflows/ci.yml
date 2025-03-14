@@ -78,14 +78,6 @@ jobs:
       - name: Verify Deployment
         run: |
           kubectl get all -A
-          kubectl get svc redis-service -o yaml
-          kubectl get svc go-service -o yaml
-          kubectl get svc redis-service
-          kubectl get configmap redis-config -o yaml
-          kubectl logs deployment/go-deployment
-          kubectl logs deployment/redis-deployment
-          kubectl describe svc redis-service
-          kubectl describe svc go-service
       
       - name: Test DNS Resolution
         run: |
@@ -97,6 +89,6 @@ jobs:
           kubectl port-forward svc/go-service 8000:80 &
           sleep 30
           curl "http://localhost:8000/health"
-          curl -v -X POST "http://localhost:8000/set/?key=username&value=JohnDoe"
-          curl -v "http://localhost:8000/get/username"
+          curl -X POST "http://localhost:8000/set?key=username&value=JohnDoe"
+          curl "http://localhost:8000/get/username"
           curl --retry 5 --retry-delay 2 --fail http://localhost:8000/ || (kubectl logs deployment/go-deployment && exit 1)
