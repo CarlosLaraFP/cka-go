@@ -83,6 +83,10 @@ jobs:
           kubectl get configmap redis-config -o yaml
           kubectl logs deployment/go-deployment
           kubectl logs deployment/redis-deployment
+      
+      - name: Test DNS Resolution
+        run: |
+          kubectl exec -it $(kubectl get pods -l app=go -o jsonpath='{.items[0].metadata.name}') -- nslookup redis-service
 
       - name: Test API Endpoint
         run: |
