@@ -56,7 +56,9 @@ jobs:
           kind load docker-image go-app:latest --name kind-cluster
 
       - name: Label Node
-        run: kubectl label node kind-cluster-control-plane size=Large
+        run: |
+          kubectl label node kind-cluster-control-plane size=Large
+          kubectl label node kind-cluster-control-plane size=XLarge
 
       - name: Install Helm
         run: |
@@ -92,9 +94,9 @@ jobs:
 
       - name: Test API Endpoint
         run: |
-          sleep 5  # Allow time for app to start
+          sleep 30  # Allow time for app to start
           kubectl port-forward svc/go-service 8000:80 &
-          sleep 5
+          sleep 30
           curl "http://localhost:8000/health"
           curl -v -X POST "http://localhost:8000/set/?key=username&value=JohnDoe"
           curl -v "http://localhost:8000/get/username"

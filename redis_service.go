@@ -43,9 +43,5 @@ func InitRedis() *RedisService {
 	redisPort := getEnv("REDIS_PORT", "6379")
 	redisAddr := fmt.Sprintf("%s:%s", redisHost, redisPort)
 	fmt.Printf("Redis running at %s | host: %s | port: %s\n", redisAddr, redisHost, redisPort)
-	svc := NewRedisService(redisAddr)
-	if svc.client == nil {
-		fmt.Printf("Error initializing Redis client at %s | host: %s | port: %s\n", redisAddr, redisHost, redisPort)
-	}
-	return svc
+	return NewRedisService(redisAddr)
 }

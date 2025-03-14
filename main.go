@@ -95,11 +95,19 @@ func main() {
 	r.Get("/get/{key}", redisService.getKey)
 	r.Get("/multiply/{a}/{b}", multiply)
 
+	// Log registered routes
+	walkFunc := func(method string, route string, handler http.Handler, middlewares ...func(http.Handler) http.Handler) error {
+		log.Printf("Route: %s %s", method, route)
+		return nil
+	}
+	if err := chi.Walk(r, walkFunc); err != nil {
+		log.Printf("Error walking routes: %v", err)
+	}
+
 	containerPort := getEnv("CONTAINER_PORT", "8000")
 
-	fmt.Printf("Server running on port %s per Kubernetes manifest\n", containerPort)
 	if err := http.ListenAndServe(":8000", r); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
-	log.Fatal(http.ListenAndServe(":8000", r))
+	fmt.Printf("Server running on port %s per Kubernetes manifest\n", containerPort)
 }
