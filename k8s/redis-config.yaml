@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: redis-config
-data:
-  REDIS_HOST: "redis-service"  # Service name from redis-deployment.yaml
-  REDIS_PORT: "6379"  # Port from redis-deployment.yaml

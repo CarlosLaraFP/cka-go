@@ -23,8 +23,8 @@ spec:
       #- name: my-credentials  # log into ECR
       containers:
       - name: go
-        image: go-app:latest  # provide full path if pulling from ECR
-        imagePullPolicy: IfNotPresent  # "Always" (prod) tries to pull go-app:latest from Docker Hub rather than KinD
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"  # provide full path if pulling from ECR
+        imagePullPolicy: {{ .Values.image.pullPolicy }}  # "Always" (prod) tries to pull go-app:latest from Docker Hub rather than KinD
         envFrom:  # environment variables
         - configMapRef:
             name: redis-config  # kubectl create -f redis-config.yaml
@@ -33,17 +33,17 @@ spec:
         #- secretRef:
         #    name: app-secret
         ports:
-        - containerPort: 8000
+        - containerPort: {{ .Values.service.targetPort }}
         readinessProbe:  # Ensure app is ready before marking as available
           httpGet:
             path: /health
-            port: 8000
+            port: {{ .Values.service.targetPort }}
           initialDelaySeconds: 5
           periodSeconds: 10
         livenessProbe:  # Ensure app is healthy, else restart pod
           httpGet:
             path: /health
-            port: 8000
+            port: {{ .Values.service.targetPort }}
           initialDelaySeconds: 10
           periodSeconds: 10
         resources:
@@ -60,11 +60,11 @@ kind: Service
 metadata:
   name: go-service
 spec:
-  type: NodePort  # uses Random algorithm for load balancing
+  type: {{ .Values.service.type }}  # uses Random algorithm for load balancing
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 8000
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
       nodePort: 30004  # optional
   selector:
     app: go  # this is how we connect the service to a specific pod

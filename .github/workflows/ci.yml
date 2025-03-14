@@ -55,14 +55,21 @@ jobs:
         run: |
           kind load docker-image go-app:latest --name kind-cluster
 
-      - name: Apply Kubernetes Manifests
+      - name: Label Node
+        run: kubectl label node kind-cluster-control-plane size=Large
+
+      - name: Install Helm
         run: |
-          kubectl label node kind-cluster-control-plane size=Large
-          kubectl apply -f k8s/redis-config.yaml
-          kubectl apply -f k8s/main-config.yaml
-          kubectl apply -f k8s/priority-class.yaml
-          kubectl apply -f k8s/redis-deployment.yaml
-          kubectl apply -f k8s/go-deployment.yaml
+          curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+          chmod 700 get_helm.sh
+          ./get_helm.sh
+
+      - name: Deploy with Helm
+        run: |
+          helm upgrade --install go-app ./chart \
+            --set image.tag=latest \
+            --set redis.enabled=true \
+            --set nodeSelector.size=Large
 
       - name: Wait for Pods to be Ready
         run: kubectl wait --for=condition=Ready pod --all --timeout=90s

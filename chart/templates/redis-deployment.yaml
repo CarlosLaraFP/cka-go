@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: redis-deployment
+  name: {{ .Values.redis.deploymentName }}
 spec:
   replicas: 1
   selector:
@@ -13,7 +13,7 @@ spec:
         app: redis
         type: stateful
     spec:
-      priorityClassName: high-priority  # Scheduling Queue (PrioritySort) -> Filtering (NodeResourcesFit, NodeName, NodeUnschedulable) -> Scoring (NodeResourcesFit, ImageLocality) -> Binding (DefaultBinder) | these plugins have extension points
+      priorityClassName: {{ .Values.priorityClassName }}  # Scheduling Queue (PrioritySort) -> Filtering (NodeResourcesFit, NodeName, NodeUnschedulable) -> Scoring (NodeResourcesFit, ImageLocality) -> Binding (DefaultBinder) | these plugins have extension points
       containers:
       - name: redis
         image: redis:7.0  # Use the latest stable Redis version
@@ -43,7 +43,7 @@ spec:
               - key: size
                 operator: In  # refer to documentation for other values
                 values:
-                - Large
+                - {{ .Values.nodeSelector.size }}
                 - XLarge
       tolerations:  # taints that this pod tolerates
       - key: "database"
@@ -55,13 +55,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: redis-service  # Exposes Redis inside the Kubernetes cluster (ClusterIP)
+  name: {{ .Values.redis.host }}  # Exposes Redis inside the Kubernetes cluster (ClusterIP)
 spec:
-  type: ClusterIP  # default
+  type: {{ .Values.redis.serviceType }}  # default
   ports:  # default Redis port is 6379
     - protocol: TCP
-      port: 6379
-      targetPort: 6379
+      port: {{ .Values.redis.port }}
+      targetPort: {{ .Values.redis.port }}
   selector:
     app: redis
     type: stateful
