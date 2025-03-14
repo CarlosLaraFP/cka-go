@@ -41,7 +41,8 @@ func (rs *RedisService) setKey(w http.ResponseWriter, r *http.Request) {
 
 	err := rs.client.Set(ctx, key, value, 0).Err()
 	if err != nil {
-		http.Error(w, "Failed to set key", http.StatusInternalServerError)
+		log.Printf("Failed to set key '%s' in Redis: %v", key, err)
+		http.Error(w, fmt.Sprintf("Failed to set key '%s' in Redis: %v", key, err), http.StatusInternalServerError)
 		return
 	}
 
@@ -57,7 +58,8 @@ func (rs *RedisService) getKey(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Key not found", http.StatusNotFound)
 		return
 	} else if err != nil {
-		http.Error(w, "Failed to retrieve key", http.StatusInternalServerError)
+		log.Printf("Failed to retrieve key '%s' in Redis: %v", key, err)
+		http.Error(w, fmt.Sprintf("Failed to retrieve key '%s' in Redis: %v", key, err), http.StatusInternalServerError)
 		return
 	}
 
@@ -83,7 +85,6 @@ func multiply(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	// Initialize Redis from `redis_service.go`
 	redisService := InitRedis()
 
 	// Setup routes

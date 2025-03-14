@@ -80,14 +80,15 @@ jobs:
           kubectl get svc redis-service -o yaml
           kubectl get svc go-service -o yaml
           kubectl get svc redis-service
-          kubectl logs deployment/go-deployment
           kubectl get configmap redis-config -o yaml
+          kubectl logs deployment/go-deployment
+          kubectl logs deployment/redis-deployment
 
       - name: Test API Endpoint
         run: |
-          sleep 15  # Allow time for app to start
+          sleep 5  # Allow time for app to start
           kubectl port-forward svc/go-service 8000:80 &
-          sleep 15
+          sleep 5
           curl "http://localhost:8000/health"
           curl -X POST "http://localhost:8000/set/?key=username&value=JohnDoe"
           curl "http://localhost:8000/get/username"
