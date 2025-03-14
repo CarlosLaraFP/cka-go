@@ -280,3 +280,10 @@ func TestMerge(t *testing.T) {
 	Merge(input, 3, []int{1, 2}, 2)
 	assert.Equal(t, result, input)
 }
+
+func TestClimbStairs(t *testing.T) {
+	assert.Equal(t, 1, ClimbStairs(1))
+	assert.Equal(t, 2, ClimbStairs(2))
+	assert.Equal(t, 3, ClimbStairs(3))
+	assert.Equal(t, 5, ClimbStairs(4))
+}
