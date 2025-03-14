@@ -90,6 +90,6 @@ jobs:
           kubectl port-forward svc/go-service 8000:80 &
           sleep 5
           curl "http://localhost:8000/health"
-          curl -X POST "http://localhost:8000/set/?key=username&value=JohnDoe"
-          curl "http://localhost:8000/get/username"
+          curl -v -X POST "http://localhost:8000/set/?key=username&value=JohnDoe"
+          curl -v "http://localhost:8000/get/username"
           curl --retry 5 --retry-delay 2 --fail http://localhost:8000/ || (kubectl logs deployment/go-deployment && exit 1)
