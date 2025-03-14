@@ -75,13 +75,17 @@ jobs:
         run: kubectl wait --for=condition=Ready pod --all --timeout=90s
 
       - name: Verify Deployment
-        run: kubectl get pods -A
+        run: |
+          kubectl get all -A
+          kubectl get svc redis-service -o yaml
+          kubectl get svc go-service -o yaml
 
       - name: Test API Endpoint
         run: |
           sleep 5  # Allow time for app to start
           kubectl port-forward svc/go-service 8000:80 &
-          sleep 3
+          sleep 5
+          curl "http://localhost:8000/health"
           curl -X POST "http://localhost:8000/set/?key=username&value=JohnDoe"
           curl "http://localhost:8000/get/username"
           curl --retry 5 --retry-delay 2 --fail http://localhost:8000/ || (kubectl logs deployment/go-deployment && exit 1)
