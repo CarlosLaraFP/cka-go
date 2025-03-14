@@ -506,23 +506,22 @@ non-alphanumeric characters, it reads the same forward and backward. Alphanumeri
 Given a string s, return true if it is a palindrome, or false otherwise.
 */
 func IsPalindrome(s string) bool {
-	// "A man, a plan, a canal: Panama"
-	input := make([]rune, 0)
+	i, j := 0, len(s)-1
 
-	for _, c := range s {
-		if unicode.IsLetter(c) {
-			input = append(input, unicode.ToLower(c))
+	for i < j {
+		if !unicode.IsLetter(rune(s[i])) && !unicode.IsNumber(rune(s[i])) {
+			i++
+			continue
 		}
-	}
-
-	left, right := 0, len(input)-1
-
-	for left < right {
-		if input[left] != input[right] {
+		if !unicode.IsLetter(rune(s[j])) && !unicode.IsNumber(rune(s[j])) {
+			j--
+			continue
+		}
+		if unicode.ToLower(rune(s[i])) != unicode.ToLower(rune(s[j])) {
 			return false
 		}
-		left++
-		right--
+		i++
+		j--
 	}
 
 	return true

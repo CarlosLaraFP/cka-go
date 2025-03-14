@@ -293,4 +293,5 @@ func TestIsPalindrome(t *testing.T) {
 	assert.Equal(t, true, IsPalindrome("A man, a plan, a canal: Panama"))
 	assert.Equal(t, false, IsPalindrome("race a car"))
 	assert.Equal(t, true, IsPalindrome(" "))
+	assert.Equal(t, false, IsPalindrome("0P"))
 }
