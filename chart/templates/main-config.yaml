@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: main-config
 data:
-  CONTAINER_PORT: {{ .Values.service.targetPort }}  # containerPort from go-deployment.yaml
+  CONTAINER_PORT: "{{ .Values.service.targetPort }}"  # containerPort from go-deployment.yaml

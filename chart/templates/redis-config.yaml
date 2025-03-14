@@ -5,5 +5,5 @@ metadata:
   name: {{ .Values.redis.configMapName }}
 data:
   REDIS_HOST: {{ .Values.redis.host }}  # Service name from redis-deployment.yaml
-  REDIS_PORT: {{ .Values.redis.port }}  # Port from redis-deployment.yaml
+  REDIS_PORT: "{{ .Values.redis.port }}"  # Port from redis-deployment.yaml
 {{- end }}
