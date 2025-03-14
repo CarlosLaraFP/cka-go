@@ -27,9 +27,9 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}  # "Always" (prod) tries to pull go-app:latest from Docker Hub rather than KinD
         envFrom:  # environment variables
         - configMapRef:
-            name: redis-config  # kubectl create -f redis-config.yaml
+            name: redis-config
         - configMapRef:
-            name: main-config  # kubectl create -f main-config.yaml
+            name: main-config
         #- secretRef:
         #    name: app-secret
         ports:
