@@ -288,3 +288,9 @@ func TestClimbStairs(t *testing.T) {
 	assert.Equal(t, 5, ClimbStairs(4))
 	assert.Equal(t, 8, ClimbStairs(5))
 }
+
+func TestIsPalindrome(t *testing.T) {
+	assert.Equal(t, true, IsPalindrome("A man, a plan, a canal: Panama"))
+	assert.Equal(t, false, IsPalindrome("race a car"))
+	assert.Equal(t, true, IsPalindrome(" "))
+}

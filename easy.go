@@ -2,6 +2,7 @@ package main
 
 import (
 	"cmp"
+	"unicode"
 )
 
 /*
@@ -497,6 +498,34 @@ func ClimbStairs(n int) int {
 	}
 
 	return current
+}
+
+/*
+A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all
+non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.
+Given a string s, return true if it is a palindrome, or false otherwise.
+*/
+func IsPalindrome(s string) bool {
+	// "A man, a plan, a canal: Panama"
+	input := make([]rune, 0)
+
+	for _, c := range s {
+		if unicode.IsLetter(c) {
+			input = append(input, unicode.ToLower(c))
+		}
+	}
+
+	left, right := 0, len(input)-1
+
+	for left < right {
+		if input[left] != input[right] {
+			return false
+		}
+		left++
+		right--
+	}
+
+	return true
 }
 
 // go test ./... -v
