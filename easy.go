@@ -490,14 +490,13 @@ Explanation: There are three ways to climb to the top.
 3. 2 steps + 1 step
 */
 func ClimbStairs(n int) int {
-	next, secondNext := 0, 1
+	previous, current := 0, 1
 
-	for n > 0 {
-		next, secondNext = secondNext, next+secondNext // Fibonacci series
-		n--
+	for range n {
+		previous, current = current, previous+current // Fibonacci sequence
 	}
 
-	return secondNext
+	return current
 }
 
 // go test ./... -v
