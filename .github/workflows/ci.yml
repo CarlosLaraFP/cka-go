@@ -58,7 +58,6 @@ jobs:
       - name: Label Node
         run: |
           kubectl label node kind-cluster-control-plane size=Large
-          kubectl label node kind-cluster-control-plane size=XLarge
 
       - name: Install Helm
         run: |
