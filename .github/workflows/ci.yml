@@ -79,15 +79,15 @@ jobs:
         run: |
           kubectl get all -A
       
-      - name: Test DNS Resolution
-        run: |
-          kubectl run -i --tty --rm debug --image=busybox --restart=Never -- nslookup redis-service
+      #- name: Test DNS Resolution
+      #  run: |
+      #    kubectl run -i --tty --rm debug --image=busybox --restart=Never -- nslookup redis-service
 
       - name: Test API Endpoint
         run: |
-          sleep 30  # Allow time for app to start
+          sleep 10  # Allow time for app to start
           kubectl port-forward svc/go-service 8000:80 &
-          sleep 30
+          sleep 10
           curl "http://localhost:8000/health"
           curl -X POST "http://localhost:8000/set?key=username&value=JohnDoe"
           curl "http://localhost:8000/get/username"
